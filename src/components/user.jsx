@@ -49,9 +49,9 @@ User.propTypes = {
     profession: PropTypes.object.isRequired,
     completedMeetings: PropTypes.number.isRequired,
     rate: PropTypes.number.isRequired,
-    onDelete: PropTypes.object.isRequired,
+    onDelete: PropTypes.func.isRequired,
     bookmark: PropTypes.bool.isRequired,
-    onToggleBookMark: PropTypes.object.isRequired
+    onToggleBookMark: PropTypes.func.isRequired
 };
 
 export default User;
