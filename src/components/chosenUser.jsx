@@ -2,13 +2,18 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { getById } from "../api/fake.api/user.api";
 import Qualitie from "./qualitie";
+import { useHistory } from "react-router-dom";
 
 const ChosenUser = ({ match }) => {
+    const history = useHistory();
     const id = match.params.userId;
     const [user, setUser] = useState();
     useEffect(() => {
         getById(id).then((data) => setUser(data));
     }, []);
+    const handleClick = () => {
+        history.push("/users");
+    };
     if (user) {
         return (
             <>
@@ -19,6 +24,7 @@ const ChosenUser = ({ match }) => {
                 <h2>Профессия: {user.profession.name}</h2>
                 <h2>Встреч: {user.completedMeetings}</h2>
                 <h2>Оценка: {user.rate} /5</h2>
+                <button onClick={handleClick}>Все пользователи</button>
             </>
         );
     }
