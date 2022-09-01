@@ -12,11 +12,15 @@ const Users = () => {
     const [professions, setProfessions] = useState();
     const [currentPage, setCurrentPage] = useState(1);
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
+    const [dataSearch, setDataSearch] = useState("");
     const pageSize = 4;
-
     const [users, setUsers] = useState();
+    const [searchedUsers, setSearchedUsers] = useState();
     useEffect(() => {
-        api.users.fetchAll().then((data) => setUsers(data));
+        api.users.fetchAll().then((data) => {
+            setUsers(data);
+            setSearchedUsers(data);
+        });
     }, []);
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
@@ -39,13 +43,22 @@ const Users = () => {
     useEffect(() => {
         setCurrentPage(1);
     }, [selectedProf]);
+    useEffect(() => {
+        if (!searchedUsers) return;
+        setUsers(
+            searchedUsers.filter((user) => {
+                return user.name
+                    .toLowerCase()
+                    .includes(dataSearch.toLowerCase());
+            })
+        );
+    }, [dataSearch]);
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
     };
     const handleProfessionSelect = (item) => {
-        // console.log(item);
         setSelectedProf(item);
-        // console.log(selectedProf);
+        setDataSearch("");
     };
     const clearFilter = () => {
         setSelectedProf();
@@ -53,6 +66,11 @@ const Users = () => {
     const handleSort = (item) => {
         setSortBy(item);
         console.log(item);
+    };
+    const handleChangeSearch = ({ target }) => {
+        setDataSearch(target.value);
+        setCurrentPage(1);
+        clearFilter();
     };
     if (users) {
         const filteredUsers = selectedProf
@@ -71,10 +89,9 @@ const Users = () => {
         const userCrop = paginate(sortedUsers, currentPage, pageSize);
 
         return (
-            <>
-                <SearchStatus length={count} />
+            <div className="d-flex">
                 {professions && (
-                    <>
+                    <div className="d-flex flex-column flex-shrink-0 p-3">
                         <GroupList
                             selectedItem={selectedProf}
                             items={professions}
@@ -86,24 +103,35 @@ const Users = () => {
                         >
                             Очистить
                         </button>
-                    </>
+                    </div>
                 )}
-                {count > 0 && (
-                    <UserTable
-                        users={userCrop}
-                        onSort={handleSort}
-                        selectedSort={sortBy}
-                        onDelete={handleDelete}
-                        onToggleBookMark={handleToggleBookMark}
+                <div className="d-flex flex-column">
+                    <SearchStatus length={count} />
+                    <input
+                        type="text"
+                        placeholder="Найти..."
+                        onChange={handleChangeSearch}
+                        value={dataSearch}
                     />
-                )}
-                <Pagination
-                    itemsCount={count}
-                    pageSize={pageSize}
-                    currentPage={currentPage}
-                    onPageChange={handlePageChange}
-                />
-            </>
+                    {count > 0 && (
+                        <UserTable
+                            users={userCrop}
+                            onSort={handleSort}
+                            selectedSort={sortBy}
+                            onDelete={handleDelete}
+                            onToggleBookMark={handleToggleBookMark}
+                        />
+                    )}
+                    <div className="d-flex justify-content-center">
+                        <Pagination
+                            itemsCount={count}
+                            pageSize={pageSize}
+                            currentPage={currentPage}
+                            onPageChange={handlePageChange}
+                        />
+                    </div>
+                </div>
+            </div>
         );
     }
     return "loading";
