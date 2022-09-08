@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { getById } from "../api/fake.api/user.api";
-import Qualitie from "./qualitie";
+import { getById } from "../../api/fake.api/user.api";
+import Qualitie from "../ui/qualities/qualitie";
 import { useHistory } from "react-router-dom";
 
 const ChosenUser = ({ match }) => {

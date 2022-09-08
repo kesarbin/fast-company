@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { paginate } from "../utils/paginate";
-import Pagination from "./pagination";
-import api from "../api";
+import { paginate } from "../../utils/paginate";
+import Pagination from "../common/pagination";
+import api from "../../api";
 import PropTypes from "prop-types";
-import GroupList from "./groupList";
-import SearchStatus from "./searchStatus";
-import UserTable from "./usersTable";
+import GroupList from "../common/groupList";
+import SearchStatus from "../ui/searchStatus";
+import UserTable from "../ui/usersTable";
 import _ from "lodash";
 const Users = () => {
     const [selectedProf, setSelectedProf] = useState();
