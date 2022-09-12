@@ -29,6 +29,7 @@ const Users = () => {
         setUsers(
             users.map((user) => {
                 if (user._id === id) {
+                    api.users.update(id, { bookmark: !user.bookmark });
                     return { ...user, bookmark: !user.bookmark };
                 }
                 return user;

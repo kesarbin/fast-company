@@ -12,7 +12,7 @@ function App() {
             <NavBar />
             <Switch>
                 <Route
-                    path="/users/:userId"
+                    path="/users/:userId/:type?"
                     render={(props) => <ChosenUser {...props} />}
                 />
                 <Route path="/users" component={Users} />
