@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import api from "../../api";
 import { getById, update } from "../../api/fake.api/user.api";
-import Qualitie from "../ui/qualities/qualitie";
 import { Link, useParams } from "react-router-dom";
 import TextField from "../common/form/textField";
 import SelectField from "../common/form/selectField";
 import MultiSelectField from "../common/form/multiSelectField";
+import UserCard from "../ui/userCard";
+import QualitiesCard from "../ui/qualitiesCard";
+import MeetingsCard from "../ui/meetingsCard";
+import Comments from "../ui/comments";
 
 const ChosenUser = ({ match }) => {
     const { type } = useParams();
@@ -143,21 +146,18 @@ const ChosenUser = ({ match }) => {
             </div>
         ) : (
             <>
-                <h1>{user.name}</h1>
-                {user.qualities.map((qual) => (
-                    <Qualitie key={qual._id} {...qual} />
-                ))}
-                <h2>Профессия: {user.profession.name}</h2>
-                <h2>Встреч: {user.completedMeetings}</h2>
-                <h2>Оценка: {user.rate} /5</h2>
-                <button>
-                    <Link
-                        onClick={toggleFormType}
-                        to={`/users/${user._id}/edit`}
-                    >
-                        Изменить
-                    </Link>
-                </button>
+                <div className="container">
+                    <div className="row gutters-sm">
+                        <div className="col-md-4 mb-3">
+                            <UserCard user={user} updateUser={toggleFormType} />
+                            <QualitiesCard data={user.qualities} />
+                            <MeetingsCard value={user.completedMeetings} />
+                        </div>
+                        <div className="col-md-8">
+                            <Comments />
+                        </div>
+                    </div>
+                </div>
             </>
         );
     }
