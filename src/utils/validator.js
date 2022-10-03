@@ -3,9 +3,14 @@ const validator = (data, config) => {
     function validate(validateMethod, data, config) {
         let statusValidate;
         switch (validateMethod) {
-            case "isRequierd":
-                statusValidate = data.trim() === "";
+            case "isRequierd": {
+                if (typeof data === "boolean") {
+                    statusValidate = !data;
+                } else {
+                    statusValidate = data.trim() === "";
+                }
                 break;
+            }
             case "isEmail": {
                 const emailRegExp = /^\S+@\S+\.\S+$/g;
                 statusValidate = !emailRegExp.test(data);
