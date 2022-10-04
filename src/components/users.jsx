@@ -7,6 +7,7 @@ import GroupList from "./groupList";
 import SearchStatus from "./searchStatus";
 import UserTable from "./usersTable";
 import _ from "lodash";
+import { useUser } from "../hooks/useUsers";
 const Users = () => {
     const [selectedProf, setSelectedProf] = useState();
     const [professions, setProfessions] = useState();
@@ -14,26 +15,29 @@ const Users = () => {
     const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
     const [dataSearch, setDataSearch] = useState("");
     const pageSize = 4;
-    const [users, setUsers] = useState();
-    const [searchedUsers, setSearchedUsers] = useState();
+    // const [users, setUsers] = useState();
+    const { users } = useUser();
+    console.log(users);
+    // const [searchedUsers, setSearchedUsers] = useState();
     useEffect(() => {
         api.users.fetchAll().then((data) => {
-            setUsers(data);
-            setSearchedUsers(data);
+            // setUsers(data);
+            // setSearchedUsers(data);
         });
     }, []);
     const handleDelete = (userId) => {
-        setUsers(users.filter((user) => user._id !== userId));
+        // setUsers(users.filter((user) => user._id !== userId));
+        console.log(userId);
     };
     const handleToggleBookMark = (id) => {
-        setUsers(
+        /* setUsers(
             users.map((user) => {
                 if (user._id === id) {
                     return { ...user, bookmark: !user.bookmark };
                 }
                 return user;
             })
-        );
+        ); */
         console.log(id);
     };
 
@@ -44,20 +48,21 @@ const Users = () => {
         setCurrentPage(1);
     }, [selectedProf]);
     useEffect(() => {
-        if (!searchedUsers) return;
+        /* if (!searchedUsers) return;
         setUsers(
             searchedUsers.filter((user) => {
                 return user.name
                     .toLowerCase()
                     .includes(dataSearch.toLowerCase());
             })
-        );
+        ); */
     }, [dataSearch]);
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
     };
     const handleProfessionSelect = (item) => {
         setSelectedProf(item);
+        // console.log(item);
         setDataSearch("");
     };
     const clearFilter = () => {
@@ -65,7 +70,7 @@ const Users = () => {
     };
     const handleSort = (item) => {
         setSortBy(item);
-        console.log(item);
+        // console.log(item);
     };
     const handleChangeSearch = ({ target }) => {
         setDataSearch(target.value);
