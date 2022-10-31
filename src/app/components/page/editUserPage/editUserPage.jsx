@@ -11,7 +11,7 @@ import qualityService from "../../../services/quality.service";
 import { useHistory } from "react-router-dom";
 
 const EditUserPage = () => {
-    const { currentUser, updateUser } = useAuth();
+    const { currentUser, updateUserData } = useAuth();
     const [isLoading, setIsLoading] = useState(true);
     const history = useHistory();
     const [data, setData] = useState({
@@ -98,15 +98,11 @@ const EditUserPage = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        try {
-            await updateUser({
-                ...data,
-                qualities: data.qualities.map((qual) => qual.value)
-            });
-            history.push(`/users/${currentUser._id}`);
-        } catch (error) {
-            setErrors(error);
-        }
+        updateUserData({
+            ...data,
+            qualities: data.qualities.map((qual) => qual.value)
+        });
+        history.push(`/users/${currentUser._id}`);
     };
     const validate = () => {
         const errors = validator(data, validatorConfig);
