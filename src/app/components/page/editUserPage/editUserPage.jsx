@@ -7,8 +7,13 @@ import MultiSelectField from "../../common/form/multiSelectField";
 import BackHistoryButton from "../../common/backButton";
 import { useAuth } from "../../../hooks/useAuth";
 import professionService from "../../../services/profession.service";
-import qualityService from "../../../services/quality.service";
+// import qualityService from "../../../services/quality.service";
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import {
+    getQualitiesLoadingStatus,
+    getQualities
+} from "../../../store/qualities";
 
 const EditUserPage = () => {
     const { currentUser, updateUserData } = useAuth();
@@ -21,8 +26,10 @@ const EditUserPage = () => {
         sex: "male",
         qualities: []
     });
+    const qualities = useSelector(getQualities());
+    const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
     const [professions, setProfession] = useState([]);
-    const [qualities, setQualities] = useState([]);
+    // const [qualities, setQualities] = useState([]);
     const [errors, setErrors] = useState({});
     async function getProfessions() {
         try {
@@ -36,7 +43,7 @@ const EditUserPage = () => {
             setProfession(professionsList);
         } catch (error) {}
     }
-    async function getQualities() {
+    /* async function getQualities() {
         try {
             const { content } = await qualityService.fetchAll();
             const qualitiesList = Object.keys(content).map((optionName) => ({
@@ -46,27 +53,30 @@ const EditUserPage = () => {
             }));
             setQualities(qualitiesList);
         } catch (error) {}
-    }
+    } */
     const transformData = (data) => {
+        console.log(qualities);
+        console.log("data", data);
         return data.map((qual) => ({
-            label: qualities.find((q) => q.value === qual).label,
+            label: qualities.find((q) => q._id === qual).name,
             value: qual
         }));
     };
     useEffect(() => {
         getProfessions();
-        getQualities();
         if (history.location.pathname !== `/users/${currentUser._id}/edit`) {
             history.push(`/users/${currentUser._id}/edit`);
         }
     }, []);
     useEffect(() => {
-        Object.keys(qualities).length > 0 &&
-            setData({
-                ...currentUser,
-                qualities: transformData(currentUser.qualities)
-            });
-    }, [currentUser, qualities]);
+        if (!qualitiesLoading && currentUser) {
+            Object.keys(qualities).length > 0 &&
+                setData({
+                    ...currentUser,
+                    qualities: transformData(currentUser.qualities)
+                });
+        }
+    }, [currentUser, qualitiesLoading]);
     useEffect(() => {
         if (data._id) setIsLoading(false);
     }, [data]);
